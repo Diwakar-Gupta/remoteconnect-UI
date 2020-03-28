@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:remoteconnect/connector/cmd.dart';
 import 'package:remoteconnect/connector/connection.dart';
 import 'package:remoteconnect/features/cmd.dart';
 import 'package:remoteconnect/features/removeWidget.dart';
 import 'package:remoteconnect/screens/status.dart';
 import 'cmd.dart';
 import 'filehandler.dart';
-import 'package:remoteconnect/features/fileOperations.dart';
 
 class Layout extends StatefulWidget {
   final Connection connection;
@@ -93,7 +93,10 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
           ]),
       body: NotificationListener<AddCmd>(
         onNotification: (ac) {
-          dynamicAddTab(Cmd());
+          final n = CmdConnector.getNew(
+              widget.connection.socket.remoteAddress.address,
+              widget.connection.socket.remotePort);
+          n.then((value) => dynamicAddTab(Cmd(connection: value)));
           return true;
         },
         child: TabBarView(
@@ -117,6 +120,7 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
                       ? NotificationListener<Close>(
                           onNotification: (_) {
                             dynamicRemoveTab(e);
+                            return true;
                           },
                           child: e,
                         )

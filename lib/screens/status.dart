@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:remoteconnect/features/cmd.dart';
-import 'cmd.dart';
 
 class Status extends StatefulWidget {
   @override

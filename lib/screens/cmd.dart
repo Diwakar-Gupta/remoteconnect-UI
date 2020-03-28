@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../connector/cmd.dart';
 
@@ -10,7 +12,18 @@ class Cmd extends StatefulWidget {
 }
 
 class _CmdState extends State<Cmd> {
-  final List<String> commands = ['first\none', 'second'];
+  final List<String> commands = [];
+
+@override
+void initState(){
+  super.initState();
+  widget.connection.socket.listen((event) { 
+    setState(() {
+      commands.add(ascii.decode(event));
+    });
+   });
+}
+
   @override
   Widget build(BuildContext context) {
     return Padding(

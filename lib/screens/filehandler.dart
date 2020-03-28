@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:remoteconnect/connector/FileManager.dart';
 import 'package:remoteconnect/features/cmd.dart';
 import 'package:remoteconnect/features/fileOperations.dart';
 import 'package:remoteconnect/features/removeWidget.dart';
 
 class FileHandler extends StatefulWidget {
   final String path;
+  final FileConnector connector;
 
-  const FileHandler({Key key, this.path}) : super(key: key);
+  const FileHandler({Key key, this.path, this.connector}) : super(key: key);
   @override
   _FileHandlerState createState() => _FileHandlerState();
 }

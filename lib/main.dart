@@ -56,7 +56,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Connection> connectedPc = [];
-  Connection pcShow = null;
+  Connection pcShow;
+
+  @override
+  void initState(){
+    super.initState();
+    pcShow = null;
+  }
 
   @override
   Widget build(BuildContext context) {

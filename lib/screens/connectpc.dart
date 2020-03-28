@@ -20,7 +20,6 @@ class _AddPcState extends State<AddPc> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        //color: Colors.red,
         width: 250,
         child: Column(
           children: <Widget>[
