@@ -43,7 +43,7 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
   }
 
   void dynamicAddTab(Widget w) {
-    dispose();
+    disposee();
     setState(() {
       list.add(w);
       _cardController = new TabController(vsync: this, length: list.length);
@@ -52,7 +52,7 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
   }
 
   void dynamicRemoveTab(Widget w) {
-    dispose();
+    disposee();
     setState(() {
       list.remove(w);
       _cardController = new TabController(vsync: this, length: list.length);
@@ -60,7 +60,7 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
     });
   }
 
-  void dispose() {
+  void disposee() {
     _cardController.dispose();
   }
 
@@ -98,32 +98,30 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
         },
         child: TabBarView(
           controller: _cardController,
-          children: list.isEmpty
-              ? <Widget>[]
-              : list
-                  .map((e) => (e is Cmd)
-                      ? Stack(
-                          children: <Widget>[
-                            e,
-                            Positioned(
-                                top: 5,
-                                right: 5,
-                                child: IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      dynamicRemoveTab(e);
-                                    }))
-                          ],
+          children: list
+              .map((e) => (e is Cmd)
+                  ? Stack(
+                      children: <Widget>[
+                        e,
+                        Positioned(
+                            top: 5,
+                            right: 5,
+                            child: IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  dynamicRemoveTab(e);
+                                }))
+                      ],
+                    )
+                  : (e is FileHandler)
+                      ? NotificationListener<Close>(
+                          onNotification: (_) {
+                            dynamicRemoveTab(e);
+                          },
+                          child: e,
                         )
-                      : (e is FileHandler)
-                          ? NotificationListener<Close>(
-                              onNotification: (_) {
-                                dynamicRemoveTab(e);
-                              },
-                              child: e,
-                            )
-                          : e)
-                  .toList(),
+                      : e)
+              .toList(),
         ),
       ),
     );

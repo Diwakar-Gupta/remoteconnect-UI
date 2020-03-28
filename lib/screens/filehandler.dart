@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:remoteconnect/features/cmd.dart';
 import 'package:remoteconnect/features/fileOperations.dart';
 import 'package:remoteconnect/features/removeWidget.dart';
 
@@ -78,22 +79,6 @@ class _FileHandlerState extends State<FileHandler> {
                           child: Row(
                             children: <Widget>[
                               ChoiceChip(label: Text('data'), selected: false)
-                              // ListView.builder(
-                              //   scrollDirection: Axis.horizontal,
-                              //   itemCount: pathSeperated.length,
-                              //   itemBuilder: (_, i) {
-                              //     return ChoiceChip(
-                              //       label: Text(pathSeperated[i]),
-                              //       selected: false,
-                              //       onSelected: (b) {
-                              //         String pat = '';
-                              //         for (int j = 0; j < i; j++)
-                              //           pat = pat + '/' + pathSeperated[j];
-                              //         FileDirectory(pat).dispatch(context);
-                              //       },
-                              //     );
-                              //   },
-                              // ),
                             ],
                           ),
                         )),
@@ -109,37 +94,43 @@ class _FileHandlerState extends State<FileHandler> {
                                   });
                                 }),
                             PopupMenuButton(
-                                onSelected: (i) {},
+                                onSelected: (i) {
+                                  switch (i) {
+                                    case -1:
+                                      Close(widget).dispatch(context);
+                                      break;
+                                    case 0:
+                                      showDialog(
+                                          barrierDismissible: true,
+                                          context: context,
+                                          child: AlertDialog(
+                                              content: RaisedButton(
+                                            onPressed: () {
+                                              print('file choosed');
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('ChooseFile'),
+                                          )));
+                                      break;
+
+                                    case 2:
+                                      AddCmd().dispatch(context);
+                                      break;
+
+                                    default:
+                                  }
+                                },
                                 child: Icon(Icons.more_vert),
                                 itemBuilder: (_) => [
                                       PopupMenuItem(
-                                          child: IconButton(
-                                              icon: Icon(Icons.file_upload),
-                                              onPressed: () {
-                                                showDialog(
-                                                    barrierDismissible: true,
-                                                    context: context,
-                                                    child: AlertDialog(
-                                                        content: RaisedButton(
-                                                      onPressed: () {
-                                                        print('file choosed');
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text('ChooseFile'),
-                                                    )));
-                                              })),
+                                          value: 0, child: Text('Upload')),
                                       PopupMenuItem(
-                                        child: IconButton(
-                                            icon: Icon(Icons.closed_caption),
-                                            onPressed: () {}),
+                                        value: 2,
+                                        child: Text('Terminal'),
                                       ),
                                       PopupMenuItem(
-                                        child: IconButton(
-                                            icon: Icon(Icons.close),
-                                            onPressed: () {
-                                              Close(widget).dispatch(context);
-                                              Navigator.pop(context);
-                                            }),
+                                        value: -1,
+                                        child: Text('Close'),
                                       )
                                     ]),
                           ],
