@@ -1,49 +1,65 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import '../connector/cmd.dart';
 
 class Cmd extends StatefulWidget {
   final CmdConnector connection;
+  StreamBuilder sb;
 
-  const Cmd({Key key, this.connection}) : super(key: key);
+  Cmd({Key key, this.connection}) {
+    print('Cmd created');
+  }
   @override
   _CmdState createState() => _CmdState();
 }
 
 class _CmdState extends State<Cmd> {
-  final List<String> commands = [];
+  @override
+  void initState() {
+    super.initState();
+    widget.connection.child = refresh;
+  }
 
-@override
-void initState(){
-  super.initState();
-  widget.connection.socket.listen((event) { 
-    setState(() {
-      commands.add(ascii.decode(event));
-    });
-   });
-}
+  void refresh(String s) {
+    if (s != '')
+      setState(() {
+        widget.connection.commands.add(s);
+      });
+  }
+
+  @override
+  void dispose() {
+    print('disposed');
+    widget.connection.child = null;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Stack(
-        children: [
-          Container(
-            child: ListView.builder(
-              itemCount: commands.length,
-              itemBuilder: (_, item) {
-                return Text(
-                  commands[item],
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                );
-              }),
-          ),
-        ],
-      ),
-    );
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Expanded(
+              child: ListView(
+                children:
+                    widget.connection.commands.map((e) => Text(e)).toList(),
+              ),
+            ),
+            ListTile(
+              title: TextField(
+                onSubmitted: (s) {
+                  if(widget.connection.send(s))
+                    setState(() {
+                      widget.connection.commands.add(s);
+                    });
+                },
+                decoration: InputDecoration(),
+              ),
+              //trailing: FlatButton(onPressed: () {}, child: Icon(Icons.send)),
+            )
+          ],
+        ));
   }
 }

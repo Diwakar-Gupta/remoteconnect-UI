@@ -47,7 +47,7 @@ class _AddPcState extends State<AddPc> {
                             waiting = false;
                           });
                           return null;
-                        }).then((value) => ConnectPc(value).dispatch(context));
+                        }).then((value){value.writeln('pc');ConnectPc(value).dispatch(context);});
                       } catch (_) {
                         setState(() {
                           waiting = false;

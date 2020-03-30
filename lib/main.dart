@@ -13,8 +13,6 @@ final themes = {
     brightness: Brightness.light,
     primaryColor: Colors.blue,
     accentColor: Colors.cyan,
-    iconTheme: IconThemeData(color: Colors.blueAccent),
-    fontFamily: 'Gilroy',
   ),
   "dark": ThemeData(
     brightness: Brightness.dark,

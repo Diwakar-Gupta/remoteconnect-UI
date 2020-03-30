@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:remoteconnect/connector/statusconnector.dart';
 import 'package:remoteconnect/features/cmd.dart';
 
 class Status extends StatefulWidget {
+  final StatusConnector status;
+
+  const Status({Key key, this.status}) : super(key: key);
   @override
   _StatusState createState() => _StatusState();
 }

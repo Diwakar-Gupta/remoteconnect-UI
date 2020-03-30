@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:remoteconnect/connector/FileManager.dart';
+import 'package:remoteconnect/connector/fileconnection.dart';
 import 'package:remoteconnect/features/cmd.dart';
 import 'package:remoteconnect/features/fileOperations.dart';
 import 'package:remoteconnect/features/removeWidget.dart';

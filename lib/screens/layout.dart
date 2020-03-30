@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:remoteconnect/connector/cmd.dart';
 import 'package:remoteconnect/connector/connection.dart';
+import 'package:remoteconnect/connector/fileconnection.dart';
+import 'package:remoteconnect/connector/statusconnector.dart';
 import 'package:remoteconnect/features/cmd.dart';
 import 'package:remoteconnect/features/removeWidget.dart';
 import 'package:remoteconnect/screens/status.dart';
@@ -15,28 +17,25 @@ class Layout extends StatefulWidget {
   _LayoutState createState() => _LayoutState();
 }
 
-class _LayoutState extends State<Layout> with TickerProviderStateMixin {
+class _LayoutState extends State<Layout> with TickerProviderStateMixin , AutomaticKeepAliveClientMixin {
   TabController _cardController;
   TabPageSelector _tabPageSelector;
 
-  List<Widget> list = [];
+  final List<Widget> list = [];
 
   @override
   void initState() {
     super.initState();
 
-    list.add(Status());
-
-    for (int i = 0; i < widget.connection.cmds.length; i++) list.add(Cmd());
-
-    for (int i = 0; i < widget.connection.fileManager.length; i++)
-      list.add(FileHandler(
-        path: widget.connection.fileManager[i],
-      ));
-    if (widget.connection.fileManager.length == 0)
-      list.add(FileHandler(
-        path: '/',
-      ));
+    for(var i in widget.connection.features){
+      if(i is StatusConnector)
+      list.add(Status(status: i));
+      if(i is CmdConnector)
+      list.add(Cmd(connection: i));
+      if(i is FileConnector)
+      list.add(FileHandler(connector: i));
+      
+    }
 
     _cardController = new TabController(vsync: this, length: list.length);
     _tabPageSelector = new TabPageSelector(controller: _cardController);
@@ -93,10 +92,9 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
           ]),
       body: NotificationListener<AddCmd>(
         onNotification: (ac) {
-          final n = CmdConnector.getNew(
-              widget.connection.socket.remoteAddress.address,
-              widget.connection.socket.remotePort);
-          n.then((value) => dynamicAddTab(Cmd(connection: value)));
+          CmdConnector.getNew(widget.connection.socket.remoteAddress.address,
+                  widget.connection.socket.remotePort)
+              .then((value) => dynamicAddTab(Cmd(connection: value)));
           return true;
         },
         child: TabBarView(
@@ -130,4 +128,7 @@ class _LayoutState extends State<Layout> with TickerProviderStateMixin {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

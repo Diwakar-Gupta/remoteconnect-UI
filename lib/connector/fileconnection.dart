@@ -1,6 +1,8 @@
 import 'dart:io';
 
-class FileConnector {
+import 'package:remoteconnect/connector/interfac.dart';
+
+class FileConnector extends Feature {
   final Socket socket;
 
   FileConnector(this.socket);
