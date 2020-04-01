@@ -50,14 +50,16 @@ class _CmdState extends State<Cmd> {
             ListTile(
               title: TextField(
                 onSubmitted: (s) {
-                  if(widget.connection.send(s))
+                  if (widget.connection.send(s))
                     setState(() {
                       widget.connection.commands.add(s);
                     });
                 },
-                decoration: InputDecoration(),
+                decoration: InputDecoration(
+                  hintText: 'command'
+                ),
               ),
-              //trailing: FlatButton(onPressed: () {}, child: Icon(Icons.send)),
+              //trailing: Container(width: 40,child: FlatButton(onPressed: () {},child: Icon(Icons.send,))),
             )
           ],
         ));
